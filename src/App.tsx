@@ -1,31 +1,20 @@
 import {useEffect, useRef} from "react";
-import {playMediaSource} from "./MediaSource.ts";
-import {playDash} from "./Shaka.ts";
-
-enum PlayerTypes {
-    SHAKA = 'shaka',
-    MSE = 'mse'
-}
+import { createMediaSource } from "./createMediaSource";
 
 export function App() {
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    const playerType: PlayerTypes = PlayerTypes.MSE
-
-
+    const audioFile = {
+        url: 'https://strm-test.msermakov.music.dev.yandex.ru/11/flac-fragmented-mp4-11.mp4',
+        mimeType: 'audio/mp4; codecs="flac"'
+    }
 
     useEffect(() => {
-        if (!audioRef.current) {
-            return
+        if (audioRef.current) {
+            audioRef.current.src = createMediaSource(audioFile.url, audioFile.mimeType);
         }
 
-        if (playerType === PlayerTypes.MSE) {
-            playMediaSource(audioRef.current)
-        } else {
-            playDash(audioRef.current);
-        }
-    },[])
-
+    },[]);
 
     return (
         <>
