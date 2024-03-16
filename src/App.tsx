@@ -4,14 +4,21 @@ import { createMediaSource } from "./createMediaSource";
 export function App() {
     const audioRef = useRef<HTMLAudioElement>(null);
 
-    const audioFile = {
-        url: 'https://strm-test.msermakov.music.dev.yandex.ru/11/flac-fragmented-mp4-11.mp4',
-        mimeType: 'audio/mp4; codecs="flac"'
+    const audioFiles = {
+
+        rawFlac: {
+            url: 'https://strm-test.msermakov.music.dev.yandex.ru/flac-samples/flac-raw/flac-raw.flac',
+            mimeType: 'audio/flac'
+        },
+        fmp4Flac: {
+            url: 'https://strm-test.msermakov.music.dev.yandex.ru/flac-samples/11/flac-fragmented-mp4-11.mp4',
+            mimeType: 'audio/mp4; codecs="flac"'
+        }
     }
 
     useEffect(() => {
         if (audioRef.current) {
-            audioRef.current.src = createMediaSource(audioFile.url, audioFile.mimeType);
+            audioRef.current.src = createMediaSource(audioFiles.rawFlac);
         }
 
     },[]);
