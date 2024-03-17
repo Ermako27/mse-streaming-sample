@@ -8,7 +8,6 @@
 3. И firefox нормально видит длительность, файла фрагментированного mp4fragment, тоже за счет mehd блока.
 ```
 
-
 1. Создаем mp4 c помощью ffmpeg
 ```
 ffmpeg -i ../flac-raw/flac-raw.flac -strict -2 -f mp4 -vn  -acodec copy -movflags faststart flac-mp4.mp4
