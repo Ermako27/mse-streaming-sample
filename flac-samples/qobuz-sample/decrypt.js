@@ -60,52 +60,12 @@ export async function unwrapKey(key, sessionKey) {
     return unwrappedKey;
 }
 
-export async function decrypt(key, encData) {
+export async function decrypt(key, iv, encData) {
     const decData = await crypto.subtle.decrypt({
         name: "aes-ctr",
-        counter: new Uint8Array([
-            53,
-            177,
-            55,
-            121,
-            246,
-            15,
-            151,
-            224,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0
-        ]),
+        counter: iv,
         length: 128
     }, key, encData);
 
     return decData;
 }
-
-
-// {
-//     "type": "Buffer",
-//     "data": [
-//     53,
-//     177,
-//     55,
-//     121,
-//     246,
-//     15,
-//     151,
-//     224,
-//     0,
-//     0,
-//     0,
-//     0,
-//     0,
-//     0,
-//     0,
-//     0
-// ]
-// }

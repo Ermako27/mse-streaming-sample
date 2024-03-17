@@ -1,123 +1,179 @@
-Трек в кодеке flac и контейнере fmp4. В папке `segments` лежат сегменты из fmp4 контейнера в виде отдельных файлов. Каждый сегмент зашифрован aes-128-ctr
+## Как работает Qobuz
+### Загрузка
+Загружает файлы с mime-type: `audio/mp4; codecs="flac"`, то есть кодек flac в контейнере fmp4.
 
-Данные из quboz, которые использовались для формирования ссылок на отдельные файлы сегменты и ключи для расшифровки
+В рамках одного трека, клиент делает несколько запросов по ссылкам, которые соответствуют шаблону
+```
+https://streaming-qobuz-sec.akamaized.net/file?uid=2971018&eid=236521551&fmt=6&fid=208417472&profile=sec-1&s=$SEGMENT$&app_id=950096963&cid=2105596&etsp=1710736373&hmac=SHRUzTiVCIgMrGkaZzDeWXq2qFc
+```
+Вместо параметра `$SEGMENT$` подставляется номер сегмента из fmp4 файла с треком. На бекенде возможны 2 варианта реализации:
+1. один fmp4 файл поделен физически на несколько файлов сегментов, каждая ссылка ведет к своему файлу
+2. на бекенде лежит один fmp4 файл, бекенд, получив запрос с номером сегмента, сам вырезает из файла нужный byte-range и отдает его клиенту
+
+### Структура сегментов
+Сегмент №0 – незашифрованный сегмент, в нем хранится вся информация о треке. Из mp4dump видно, что в сегменте есть заголовок
+```
+[C7C75DF0FDD9-51E9-8FC2-2971-E4ACF8D2] size=24+457
+```
+Конкретно из этого заголовка браузер парсит такую структуру
 ```json
 {
-    "file_type": "full",
+    "boxType": "QBZ_INIT_DATA_BOX",
+    "start": 24,
+    "size": 481,
+    "type": "uuid",
+    "uuid": "c7c75df0fdd951e98fc22971e4acf8d2",
+    "initial_data_raw": {
+        "type": "Buffer",
+        "data": [
+          // UInt8Array 
+        ]
+    },
     "track_id": 236521551,
-    "format_id": 6,
-    "audio_file_id": 208417472,
-    "sampling_rate": 44100,
-    "bits_depth": 16,
-    "n_channels": 2,
-    "duration": 136.09990929705216,
-    "n_samples": 6002006,
-    "mime_type": "audio/mp4; codecs=\"flac\"",
-    "url_template": "https://streaming-qobuz-sec.akamaized.net/file?uid=2971018&eid=236521551&fmt=6&fid=208417472&profile=sec-1&s=$SEGMENT$&app_id=950096963&cid=2105596&etsp=1710624428&hmac=eqZl7-8RdGW5sm4EWNYjhevc-yU",
-    "n_segments": 14,
-    "key_id": "a54279f6-140f-dc50-51ad-c3ed66d8e5b2",
-    "key": "qbz-1.95TLYuAwVwDWZFZfsyRI-NmFZzoryD0C41Rcqo3XN8Q.62IBkF0J3FO9FhqlssDrfg",
-    "blob": "000000236521551"
+    "file_id": 208417472,
+    "sample_rate": 44100,
+    "bits_per_sample": 16,
+    "channels_count": 2,
+    "samples_count": 6002006,
+    "key_id": "a54279f6140fdc5051adc3ed66d8e5b2",
+    "segments": [
+        {
+            "length": 596760,
+            "samples_count": 442368,
+            "start_time": 0,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 688527,
+            "samples_count": 442368,
+            "start_time": 10.031020408163265,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 750915,
+            "samples_count": 442368,
+            "start_time": 20.06204081632653,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 750323,
+            "samples_count": 442368,
+            "start_time": 30.093061224489794,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 678885,
+            "samples_count": 442368,
+            "start_time": 40.12408163265306,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 784528,
+            "samples_count": 442368,
+            "start_time": 50.155102040816324,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 896156,
+            "samples_count": 442368,
+            "start_time": 60.18612244897959,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 868341,
+            "samples_count": 442368,
+            "start_time": 70.21714285714285,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 891711,
+            "samples_count": 442368,
+            "start_time": 80.24816326530612,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 1093550,
+            "samples_count": 442368,
+            "start_time": 90.27918367346939,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 1163104,
+            "samples_count": 442368,
+            "start_time": 100.31020408163266,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 1158596,
+            "samples_count": 442368,
+            "start_time": 110.34122448979593,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 1141072,
+            "samples_count": 442368,
+            "start_time": 120.3722448979592,
+            "duration": 10.031020408163265
+        },
+        {
+            "length": 205611,
+            "samples_count": 251222,
+            "start_time": 130.40326530612248,
+            "duration": 5.696643990929705
+        }
+    ]
 }
 ```
-### Расшифровка
-ключ состоит из 3-х частей
-1. `qbz-1`
-2. `95TLYuAwVwDWZFZfsyRI-NmFZzoryD0C41Rcqo3XN8Q` base64
-3. `62IBkF0J3FO9FhqlssDrfg` base64
-
-Чтобы получить ключ для расшифровки нужно:
-**Шаг 1**
-Сделать Uint из 2 и 3 частей ключа. Для это нужно сделать textToRaw(decodeBase64Url(...))
-```js
-function unescape(e) {
-  return (e + "===".slice((e.length + 3) % 4)).replace(/-/g, "+").replace(/_/g, "/")
-}
-
-decodeBase64Url = function(e) {
-    return atob(unescape(e))
-}
-
-textToRaw = function(e) {
-    return Uint8Array.from(Array.from(e).map((function(e) {
-        return e.charCodeAt(0)
-    })))
-}
+Все остальные сегменты после №0 частично зашифрованы с помощью aes-128-ctr. Частично означает, что в них не зашифрован заголовок `[styp]`,
+к тому же, судя по коду, зашифрованы еще и не все фреймы сегмента. Код расшифровки можно увидеть в файлах `script.js` и `decrypt.js`.
+Каждый сегмент после сегмента №0 также содержит похожий заголовок
 ```
-**Шаг 2. Разворачивание ключа.** Вторая часть `95TLYuAwVwDWZFZfsyRI-NmFZzoryD0C41Rcqo3XN8Q` это зашифрованный ключ для дальнейшей расшифровки музыкальных файлов.
-Чтобы расшифровать ключ, нужно воспользоваться третьей частью `62IBkF0J3FO9FhqlssDrfg`.
-```js
-/**
- * r - Uint32 из второй части включа, то есть из `95TLYuAwVwDWZFZfsyRI-NmFZzoryD0C41Rcqo3XN8Q`
- * n - Uint16 из третьей части ключа, то есть из `62IBkF0J3FO9FhqlssDrfg`
- */
-crypto.subtle.unwrapKey("raw", r, e._sessionKey, {
-  name: "AES-CBC",
-  iv: n
-}, {
-  name: "AES-CTR"
-}, !1, ["decrypt"]);
+[3B42129256F3-5F75-9236-63B6-9A1F52B2] size=24+1548
 ```
-**Шаг 3. Создание sessionKey.**
-При создании используются данные из ответа на запрос https://www.qobuz.com/api.json/0.2/session/start
+Из этого заголовка браузер парсит такую структуру
 ```json
 {
-  "session_id": "dRj_t8WrcdBuJBAmeahMJw",
-  "profile": "qbz-1",
-  "infos": "rMttuVpW9Y6rIJN3dEvxAA.bm9uZQ",
-  "expires_at": 1710574239
+    "boxType": "QBZ_SEGMENT_DATA_BOX",
+    "start": 24,
+    "size": 1572,
+    "type": "uuid",
+    "uuid": "3b42129256f35f75923663b69a1f52b2",
+    "frames": [
+        {
+            "length": 1583,
+            "flags": 1,
+            "startOfFrame": 2080
+        },
+        {
+            "length": 4995,
+            "flags": 0,
+            "startOfFrame": 3663
+        },
+        {
+            "length": 4968,
+            "flags": 1,
+            "startOfFrame": 8658
+        },
+        {
+            "length": 4965,
+            "flags": 0,
+            "startOfFrame": 13626
+        },
+        {
+            "length": 4904,
+            "flags": 1,
+            "startOfFrame": 18591
+        },
+        {
+            "length": 4905,
+            "flags": 0,
+            "startOfFrame": 23495
+        }
+      // множество других фреймов
+    ]
 }
 ```
-Процесс создания sessionKey начинается в функции `sessionStart`, само создание происходит в `S(r.infos);`.
-В `S(r.infos);` выполняются следующие шаги:
-
-```js
-d.initialization = function() {
-  var e = window.__ENVIRONMENT__; // production
-  return "recette" === e ? d.initialSeed("MTBiMjUxYzI4NmNmYmY2NGQ2YjcxMD", window.utimezone.london) : "integration" === e ? d.initialSeed("MmFiNzEzMWQzODM2MjNjZjQwM2NmM2", window.utimezone.algier) : d.initialSeed("OTc5NTQ5NDM3ZmNjNGEzZmFhZDQ4Nj", window.utimezone.berlin)
-}
-
-d.initialSeed = function(e, t) {
-  // e = OTc5NTQ5NDM3ZmNjNGEzZmFhZDQ4Nj
-  // t = window.utimezone.berlin = 53
-  return window.randomize.initialSeed(e, t)
-}
-
-// это и есть window.randomize.initialSeed
-t.initialSeed = function(e, t) {
-  /**
-   * e = OTc5NTQ5NDM3ZmNjNGEzZmFhZDQ4Nj
-   * t = 53
-   */
-  return function(e, t, r) {
-    /**
-     * e = OTc5NTQ5NDM3ZmNjNGEzZmFhZDQ4Nj
-     * t = a.default.timezones[53].info = diNWNkMjVkY2I=MWNlNTlmYjA5ZDQ2
-     * r = a.default.timezones[t].extras = NGM4NGJlNmE4YzU4YTQyMDA0OTU=
-     */
-    return atob((e + t + r).substr(0, (e + t + r).length - 44))
-  }(e, a.default.timezones[t].info, a.default.timezones[t].extras) || (new Date).getTime()
-}
-/////////////////////
-
-const r = 'rMttuVpW9Y6rIJN3dEvxAA.bm9uZQ'.split('.')
-const n = textToRaw(decodeBase64Url(r[0]))
-const a = textToRaw(decodeBase64Url(r[1]))
-const o = window.rng.prototype.initialization()
-const s = Uint8Array.from(o.match(/[\s\S]{1,2}/g).map((function(e) {
-  return parseInt(e, 16)
-})))
-const deriveKey = window.crypto.subtle.importKey("raw", s, {name: "HKDF"}, !1, ["deriveKey", "deriveBits"]);
-const sessionKey = window.crypto.subtle.deriveKey({
-  name: "HKDF",
-  hash: "SHA-256",
-  salt: n,
-  info: a
-}, deriveKey, {
-  name: "AES-CBC",
-  length: 128
-}, !1, ["unwrapKey"]);
-```
-
-authToken = 5wcFeGlmGOX6gNubYccQw0sV9p9TVTHLvmHgOVb_IPXPrE5FAc6VHFd6Jeqo7LpYTkuqsIpn2Co1GePVZ_egVQ
-
+На примере скачанного файла фреймы с `"flags": 0` не зашифрованы.
+### Длительность и перемотка
+Длительность берется из сегмента №0. Перемотка реализуется с помощью `segments`, пользователь нажимает на определенное время, по нему определяем
+№ нужного сегмента и загружаем его по шаблонной ссылке, куда вместо `$SEGMENT$` подставляем № сегмента.
