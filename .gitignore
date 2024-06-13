@@ -24,4 +24,7 @@ dist-ssr
 *.sw?
 *.mp4
 *.flac
+*.mov
+*.aac
+*.mp3
 .ssl

@@ -1,6 +1,4 @@
 # mse-streaming-sample
 Демо-приложение для тестирования форматов аудио для потокового воспроизведения.
 
-В папке `flac-samples` лежат ссылки на файлы с flac/fmp4
-
-Ссылка на диск, где лежат сами файлы https://disk.yandex.ru/d/h55t0Ua99FR-rA
+В папке `audio-samples` лежат ссылки на файлы https://disk.yandex.ru/d/Fstu4uSHaoxtRw

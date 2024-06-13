@@ -11,14 +11,14 @@ export function App() {
             mimeType: 'audio/flac'
         },
         fmp4Flac: {
-            url: 'https://strm-test.msermakov.music.dev.yandex.ru/flac-samples/11/flac-fragmented-mp4-11.mp4',
+            url: 'https://cdn-demo.s3.yandex.net/654d34b5-1c79-4a0b-a24d-af7841e0ee14/STRM-9313-flac-samples/ff-13-fmp4-in-mp4.mp4',
             mimeType: 'audio/mp4; codecs="flac"'
         }
     }
 
     useEffect(() => {
         if (audioRef.current) {
-            audioRef.current.src = createMediaSource(audioFiles.rawFlac);
+            audioRef.current.src = createMediaSource(audioFiles.fmp4Flac);
         }
 
     },[]);
