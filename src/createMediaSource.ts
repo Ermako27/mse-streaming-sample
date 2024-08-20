@@ -1,18 +1,19 @@
 interface CreateMediaSourceParams {
-    url: string,
-    mimeType: string
+    url: string;
+    mimeType: string;
+    offset?: number;
 }
 
-export function createMediaSource({ url, mimeType }: CreateMediaSourceParams): string {
+export function createMediaSource({ url, mimeType, offset }: CreateMediaSourceParams): string {
     // Создаем MSE
     const mediaSource = new MediaSource();
 
     // Полный размер файла
-    let size: number | null = null;
+    let size: number = 64 * 1024 * 30;
     const chunkSize = 64 * 1024;
 
     // Кол-во загруженных байтов
-    let loadedBytes = 0;
+    let loadedBytes = typeof offset !== 'undefined' ? offset : 0;
 
     // Обработчик открытия SourceBuffer
     const onSourceOpen = (): void => {
@@ -34,10 +35,6 @@ export function createMediaSource({ url, mimeType }: CreateMediaSourceParams): s
                 }
             });
 
-            if (size === null) {
-                size = Number(response.headers.get('content-range')!.split('/')[1]);
-            }
-
             const buffer = await response.arrayBuffer();
 
             loadedBytes += Number(response.headers.get('content-length')!);
@@ -49,7 +46,8 @@ export function createMediaSource({ url, mimeType }: CreateMediaSourceParams): s
         // Обработчик добавления чанка байт
         const onUpdateEnd = (): void => {
             // Если скачали не весь файл, то загружаем следующий чанк
-            if (size !== null && loadedBytes < size) {
+            if (loadedBytes < size) {
+                debugger
                 setTimeout(getByteRange, 100)
             } else {
                 mediaSource.removeEventListener('sourceopen', onSourceOpen);
