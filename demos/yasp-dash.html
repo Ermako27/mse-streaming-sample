@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <base href=".." />
+    </head>
+    <body>
+        <video id="yasp-video" controls autoplay></video>
+
+        <script src="https://yastatic.net/yandex-video-player-iframe-api-bundles/1.0-12054/js/yasp.js"></script>
+        <script>
+
+            const files = {
+                'dashFromRawFlac': 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/dash-flac/dash-from-raw-flac/stream.mpd',
+                'dashFromMp4Fmp4flac': 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/dash-flac/dash-from-mp4-fmp4-flac/stream.mpd'
+            }
+
+            const video = document.getElementById('yasp-video');
+            const yasp = window.Ya.YaspVideoElement.attach(video);
+
+            yasp.addEventListener('error', () => {
+                // Фатальная ошибка, плеер играть дальше не может
+                console.error(yasp.error);
+
+                if (yasp.error.yaspError) {
+                    // Фатальная ошибка YaSP
+                    console.error(yasp.error.yaspError);
+                }
+            });
+
+            yasp.addEventListener('yasp-error', ({ detail: e }) => {
+                // Не фатальная ошибка
+                console.error(e);
+            });
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const file = urlParams.get('file');
+
+            if (!file) {
+                throw Error('?file= param not specified');
+            }
+
+            video.src = files[file];
+            video.volume = 0.2;
+
+            video.addEventListener('timeupdate',
+                () => {
+                    console.log('currentTime', video.currentTime);
+                }
+            );
+
+        </script>
+    </body>
+</html>
+

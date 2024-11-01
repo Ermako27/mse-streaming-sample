@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <base href=".." />
+    </head>
+    <body>
+        <audio id="yasp" controls autoplay></audio>
+
+        <script src="https://playerweb-ci.s3.mds.yandex.net/video-player-iframe-api/stands/trunk/build/js/yasp.js"></script>
+        <script>
+            const files = {
+                aac64he_1: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac64he-mp4-1?container=mp4&codec=mp4a.40.5',
+                aac256_1: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac256-mp4-1?container=mp4&codec=mp4a.40.2',
+                aac192_1: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac192-mp4-1?container=mp4&codec=mp4a.40.2',
+
+                aac64he_2: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac64he-mp4-2?container=mp4&codec=mp4a.40.5',
+                aac256_2: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac256-mp4-2?container=mp4&codec=mp4a.40.2',
+                aac192_2: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac192-mp4-2?container=mp4&codec=mp4a.40.2',
+
+                aac64he_3: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac64he-mp4-3?container=mp4&codec=mp4a.40.5',
+                aac256_3: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac256-mp4-3?container=mp4&codec=mp4a.40.2',
+                aac192_3: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac192-mp4-3?container=mp4&codec=mp4a.40.2',
+
+                aac64he_4: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac64he-mp4-4?container=mp4&codec=mp4a.40.5',
+                aac256_4: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac256-mp4-4?container=mp4&codec=mp4a.40.2',
+                aac192_4: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac192-mp4-4?container=mp4&codec=mp4a.40.2',
+
+                aac64he_5: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac64he-mp4-1',
+                aac256_5: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac256-mp4-1',
+                aac192_5: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac/aac192-mp4-1',
+
+                flac_1: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-1?container=mp4&codec=flac',
+                flac_2: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-2?container=mp4&codec=flac',
+                flac_3: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-3?container=mp4&codec=flac',
+                flac_4: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-4?container=mp4&codec=flac',
+                flac_5: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-5?container=mp4&codec=flac',
+                flac_6: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-6?container=mp4&codec=flac',
+                flac_7: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-7?container=mp4&codec=flac',
+                flac_8: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-8?container=mp4&codec=flac',
+                flac_9: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-9?container=mp4&codec=flac',
+                flac_10: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-10?container=mp4&codec=flac',
+                flac_11: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-11?container=mp4&codec=flac',
+                flac_12: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-12?container=mp4&codec=flac',
+
+                flac_13: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac/flac-mp4-1',
+            }
+
+            const audioYasp = document.getElementById('yasp');
+            window.Ya.applyFlags('{}');
+            window.Ya.YaspAudioElement.setWorkerConfig({ sourceLimit: 10 });
+            const audio = window.Ya.YaspAudioElement.attach(audioYasp);
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const file = urlParams.get('file');
+
+            if (!file) {
+                throw Error('?file= param not specified');
+            }
+
+            audio.src = files[file];
+            audio.volume = 0;
+
+            function addYaspEventListeners() {
+                const ts = performance.now();
+                console.log('yasp setsource', 0);
+                audio.addEventListener(
+                    'canplay',
+                    () => {
+                        console.log('yasp canplay', performance.now() - ts);
+                    },
+                    { once: true },
+                );
+                audio.addEventListener(
+                    'play',
+                    () => {
+                        console.log('yasp play', performance.now() - ts);
+                    },
+                    { once: true },
+                );
+                audio.addEventListener(
+                    'timeupdate',
+                    () => {
+                        console.log('yasp timeupdate', performance.now() - ts);
+                    },
+                    { once: true },
+                );
+
+                audio.addEventListener(
+                    'timeupdate',
+                    () => {
+                        console.log('currentTime', audio.currentTime);
+                    }
+                );
+            }
+
+            addYaspEventListeners();
+        </script>
+    </body>
+</html>
