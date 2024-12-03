@@ -5,6 +5,7 @@ interface CreateMediaSourceParams {
     mimeType: string;
     offset: number;
     key: string;
+    size: number
 }
 
 /**
@@ -28,12 +29,11 @@ function createFirstChunkSize(offset: number, chunkSize: number) {
     return result
 }
 
-export function createMediaSource({ url, mimeType, offset, key }: CreateMediaSourceParams): string {
+export function createMediaSource({ url, mimeType, offset, key, size }: CreateMediaSourceParams): string {
     // Создаем MSE
     const mediaSource = new MediaSource();
 
     // Полный размер файла
-    let size: null | number = null;
 
     // Размер чанка должен быть кратен 128
     const chunkSize = 256 * 1024;
@@ -76,8 +76,6 @@ export function createMediaSource({ url, mimeType, offset, key }: CreateMediaSou
                                 let bufferToAppend: ArrayBuffer = decryptedBuffer;
                                 if (loadedBytes === 0) {
                                     bufferToAppend = decryptedBuffer.slice(offset);
-                                    // @ts-ignore
-                                    size = Number(response.headers.get('content-range').split('/')[1])
                                 }
                     
                                 loadedBytes += Number(response.headers.get('content-length'));
