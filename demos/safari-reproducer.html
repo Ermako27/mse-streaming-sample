@@ -1,0 +1,58 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <base href=".." />
+    </head>
+    <body>
+        <audio id="audio" controls></audio>
+        <script>
+            let currentTrack = 0;
+            const audio = document.getElementById('audio');
+            const tracks = {
+                'flac-1': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-flac/flac-1',
+                },
+                'flac-1-with-type': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-flac/flac-1.flac',
+                },
+                'aac192-1': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-aac/aac192-gained-1',
+                },
+                'aac192-1-with-type': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-aac/aac192-gained-1.aac',
+                },
+                'aac256-1': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-aac/aac256-1',
+                },
+                'aac256-1-with-type': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-aac/aac256-1.aac',
+                },
+                'aac64he-1': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-aac/aac64he-1',
+                },
+                'aac64he-1-with-type': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/original-aac/aac64he-gained-1.aac',
+                },
+                'mp3-1': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp3/preview192'
+                },
+                'mp3-2': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp3/preview192.mp3'
+                }
+
+            };
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const file = urlParams.get('file');
+
+            if (!file) {
+                throw Error('?file= param not specified');
+            }
+
+            audio.src = tracks[file].src;
+        </script>
+    </body>
+</html>

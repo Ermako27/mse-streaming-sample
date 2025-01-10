@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Title</title>
+        <base href=".." />
+    </head>
+    <body>
+        <audio id="yasp" controls autoplay></audio>
+
+        <script src="https://playerweb-ci.s3.mds.yandex.net/video-player-iframe-api/stands/users/p-vasnetsov/PLAYERWEB-7642_add_decoder/build/js/yasp.js"></script>
+        <script>
+            let currentTrack = 0;
+            const audioYasp = document.getElementById('yasp');
+            const tracks = {
+                'flac-mp4-13-enc': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-flac-enc/flac-mp4-13-enc?container=mp4&codec=flac',
+                    key: 'f9eb09cc6655eda6b9654629c41a8515',
+                },
+                'aac192-mp4-5-enc': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac-enc/aac192-mp4-5-enc?container=mp4&codec=mp4a.40.2',
+                    key: 'f9eb09cc6655eda6b9654629c41a8515',
+                },
+                'aac256-mp4-5-enc': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac-enc/aac256-mp4-5-enc?container=mp4&codec=mp4a.40.2',
+                    key: 'f9eb09cc6655eda6b9654629c41a8515',
+                },
+                'aac64he-mp4-5-enc': {
+                    src: 'https://s3.mds.yandex.net/music-frontend-static/music-test-audio-mp4/mp4-fmp4-aac-enc/aac64he-mp4-5-enc?container=mp4&codec=mp4a.40.5',
+                    key: 'f9eb09cc6655eda6b9654629c41a8515',
+                },
+            };
+            window.Ya.applyFlags('{}');
+            window.Ya.YaspAudioElement.setWorkerConfig({ sourceLimit: 10 });
+            const audio = window.Ya.YaspAudioElement.attach(audioYasp);
+
+            addYaspEventListeners();
+
+            function addYaspEventListeners() {
+                const ts = performance.now();
+                console.log('yasp setsource', 0);
+                audio.addEventListener(
+                    'canplay',
+                    () => {
+                        console.log('yasp canplay', performance.now() - ts);
+                    },
+                    { once: true },
+                );
+                audio.addEventListener(
+                    'play',
+                    () => {
+                        console.log('yasp play', performance.now() - ts);
+                    },
+                    { once: true },
+                );
+                audio.addEventListener(
+                    'timeupdate',
+                    () => {
+                        console.log('yasp timeupdate', performance.now() - ts);
+                    },
+                );
+            }
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const file = urlParams.get('file');
+
+            if (!file) {
+                throw Error('?file= param not specified');
+            }
+
+            window.Ya.YaspAudioElement.configureSource(tracks[file].src, {
+                audioDecodingKey: tracks[file].key,
+            });
+            audio.src = tracks[file].src;
+        </script>
+    </body>
+</html>

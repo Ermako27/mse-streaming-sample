@@ -22,10 +22,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-*.mp4
-*.flac
-*.mov
-*.aac
-*.mp3
 .ssl
-files
